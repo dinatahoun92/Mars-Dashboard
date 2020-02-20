@@ -1,25 +1,28 @@
-let store = {
+let store = Immutable.Map({
   user: { name: "Student" },
-  apod: "",
   rovers: ["Curiosity", "Opportunity", "Spirit"]
-};
-
+});
 // add our markup to the page
 const root = document.getElementById("root");
 
-const updateStore = (store, newState) => {
-  store = Object.assign(store, newState);
-  render(root, store);
+const updateStore = (state, newState) => {
+  console.log(newState);
+  const newStore = store.set("apot", newState.apod);
+  console.log(Immutable.Seq(newStore));
+  render(root, Immutable.Seq(newStore));
 };
-
 const render = async (root, state) => {
   root.innerHTML = App(state);
 };
 
 // create content
 const App = state => {
+  console.log(state);
   let { rovers, apod } = state;
-
+  const roversArr = state.getIn(["rovers"]);
+  const newApod = state.getIn(["apot"]);
+  console.log(Immutable.Seq(store));
+  console.log(newApod);
   return `
         <header>
         <h1>
@@ -28,14 +31,15 @@ const App = state => {
         </header>
         <nav>
         <ul>
-        <li>
-        Curiosity
-        <li>
-        Opportunity
-        </li>
-        <li>
-        Spirit 
-        </li>
+       ${roversArr
+         .map(
+           (item, i) =>
+             `  <li>
+          ${item}
+          <li>
+          `
+         )
+         .join("")}
         <ul>
         </nav>
         <main>
@@ -56,7 +60,7 @@ const App = state => {
         </main>
         <section>
         <div class="imgContainer">
-        ${ImageOfTheDay(apod)}
+        ${ImageOfTheDay(newApod)}
 <p>date</p>
         </div>
         </section>
@@ -89,6 +93,7 @@ const Greeting = name => {
 // Example of a pure function that renders infomation requested from the backend
 const ImageOfTheDay = apod => {
   // If image does not already exist, or it is not from today -- request it again
+  console.log(apod);
   const today = new Date();
   const photodate = new Date(apod.date);
   console.log(photodate.getDate(), today.getDate());
@@ -117,11 +122,15 @@ const ImageOfTheDay = apod => {
 
 // Example API call
 const getImageOfTheDay = state => {
+  console.log(state);
   let { apod } = state;
-
+  console.log({ apod });
   fetch(`http://localhost:3000/apod`)
     .then(res => res.json())
-    .then(apod => updateStore(store, { apod }));
-
-  return data;
+    .then(apod => {
+      updateStore(store, { apod });
+      console.log({ apod });
+    });
+  // return data;
 };
+getImageOfTheDay(Immutable.Seq(store));
