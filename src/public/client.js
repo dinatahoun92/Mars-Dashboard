@@ -21,10 +21,9 @@ const App = state => {
   console.log(state);
   let { rovers, roverInfo } = state;
   const roversArr = state.getIn(["rovers"]);
-  const newRoverInfo1 = state.getIn(["roverInfo", "rover", "id"]);
+  const newRoverInfoRover = state.getIn(["roverInfo", "rover"]);
   const newRoverInfo = state.getIn(["roverInfo"]);
   console.log(state);
-  console.log(newRoverInfo1);
   return `
         <header>
         <h1>
@@ -46,16 +45,28 @@ const App = state => {
         </nav>
         <main>
         <p>
-        revor name :
+        revor name : ${
+          newRoverInfoRover ? state.getIn(["roverInfo", "rover", "name"]) : ""
+        }
         </p>
         <p>
-        Launch Date : 
+        Launch Date :  ${
+          newRoverInfoRover
+            ? state.getIn(["roverInfo", "rover", "launch_date"])
+            : ""
+        }
         </p>
         <p>
-        Landing Date : 
+        Landing Date :  ${
+          newRoverInfoRover
+            ? state.getIn(["roverInfo", "rover", "landing_date"])
+            : ""
+        }
         </p>
         <p>
-        Status :
+        Status : ${
+          newRoverInfoRover ? state.getIn(["roverInfo", "rover", "status"]) : ""
+        }
         </p>
         <p>
           Most recently available photos :</p>
