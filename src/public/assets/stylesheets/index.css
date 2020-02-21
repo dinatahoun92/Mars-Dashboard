@@ -33,6 +33,7 @@ nav ul li {
   margin-top: 15px;
 }
 main {
+  min-height: 90vh;
 }
 p {
   font-weight: 500;

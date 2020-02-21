@@ -1,13 +1,14 @@
-let store = Immutable.Map({
+let store = Immutable.fromJS({
   user: { name: "Student" },
-  rovers: ["Curiosity", "Opportunity", "Spirit"]
+  rovers: ["Curiosity", "Opportunity", "Spirit"],
+  chosenRover: "Curiosity"
 });
 // add our markup to the page
 const root = document.getElementById("root");
 
 const updateStore = (state, newState) => {
   console.log(newState);
-  const newStore = store.set("apot", newState.apod);
+  const newStore = store.set("roverInfo", Immutable.fromJS(newState.roverInfo));
   console.log(Immutable.Seq(newStore));
   render(root, Immutable.Seq(newStore));
 };
@@ -18,11 +19,12 @@ const render = async (root, state) => {
 // create content
 const App = state => {
   console.log(state);
-  let { rovers, apod } = state;
+  let { rovers, roverInfo } = state;
   const roversArr = state.getIn(["rovers"]);
-  const newApod = state.getIn(["apot"]);
-  console.log(Immutable.Seq(store));
-  console.log(newApod);
+  const newRoverInfo1 = state.getIn(["roverInfo", "rover", "id"]);
+  const newRoverInfo = state.getIn(["roverInfo"]);
+  console.log(state);
+  console.log(newRoverInfo1);
   return `
         <header>
         <h1>
@@ -60,7 +62,7 @@ const App = state => {
         </main>
         <section>
         <div class="imgContainer">
-        ${ImageOfTheDay(newApod)}
+        ${ImageOfTheDay(newRoverInfo)}
 <p>date</p>
         </div>
         </section>
@@ -91,31 +93,31 @@ const Greeting = name => {
 };
 
 // Example of a pure function that renders infomation requested from the backend
-const ImageOfTheDay = apod => {
+const ImageOfTheDay = roverInfo => {
   // If image does not already exist, or it is not from today -- request it again
-  console.log(apod);
-  const today = new Date();
-  const photodate = new Date(apod.date);
-  console.log(photodate.getDate(), today.getDate());
-
-  console.log(photodate.getDate() === today.getDate());
-  if (!apod || apod.date === today.getDate()) {
+  console.log(roverInfo);
+  // const today = new Date();
+  // const photodate = new Date(roverInfo.date);
+  // console.log(photodate.getDate(), today.getDate());
+  // console.log(photodate.getDate() === today.getDate());
+  if (!roverInfo) {
     getImageOfTheDay(store);
   }
+  console.log(roverInfo);
 
   // check if the photo of the day is actually type video!
-  if (apod.media_type === "video") {
-    return `
-            <p>See today's featured video <a href="${apod.url}">here</a></p>
-            <p>${apod.title}</p>
-            <p>${apod.explanation}</p>
-        `;
-  } else {
-    return `
-            <img src="${apod.image.url}" height="350px" width="100%" />
-            <p>${apod.image.explanation}</p>
-        `;
-  }
+  // if (roverInfo.media_type === "video") {
+  //   return `
+  //           <p>See today's featured video <a href="${roverInfo.url}">here</a></p>
+  //           <p>${roverInfo.title}</p>
+  //           <p>${roverInfo.explanation}</p>
+  //       `;
+  // } else {
+  //   return `
+  //           <img src="${roverInfo.image.url}" height="350px" width="100%" />
+  //           <p>${roverInfo.image.explanation}</p>
+  //       `;
+  // }
 };
 
 // ------------------------------------------------------  API CALLS
@@ -123,14 +125,13 @@ const ImageOfTheDay = apod => {
 // Example API call
 const getImageOfTheDay = state => {
   console.log(state);
-  let { apod } = state;
-  console.log({ apod });
-  fetch(`http://localhost:3000/apod`)
+  let { roverInfo } = state;
+  console.log({ roverInfo });
+  fetch(`http://localhost:3000/roverinfo`)
     .then(res => res.json())
-    .then(apod => {
-      updateStore(store, { apod });
-      console.log({ apod });
+    .then(roverInfo => {
+      updateStore(store, { roverInfo });
+      console.log({ roverInfo });
     });
   // return data;
 };
-getImageOfTheDay(Immutable.Seq(store));
