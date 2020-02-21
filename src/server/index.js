@@ -26,5 +26,15 @@ app.get("/roverinfo", async (req, res) => {
     console.log("error:", err);
   }
 });
+app.get("/curiosity", async (req, res) => {
+  try {
+    let curiosity = await fetch(
+      `https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?sol=16&api_key=${process.env.API_KEY}`
+    ).then(res => res.json());
+    res.send(curiosity);
+  } catch (err) {
+    console.log("error:", err);
+  }
+});
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));

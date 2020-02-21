@@ -3,14 +3,27 @@ let store = Immutable.fromJS({
   rovers: ["Curiosity", "Opportunity", "Spirit"],
   chosenRover: "Curiosity"
 });
+let roverInfoVar, curiosityVar;
 // add our markup to the page
 const root = document.getElementById("root");
+const updateStore = (state, item, newState) => {
+  if (item === "roverInfo") {
+    roverInfoVar = newState;
+  }
+  if (item === "curiosity") {
+    curiosityVar = newState;
+    console.log(newState);
+  }
+  console.log(roverInfoVar);
+  console.log(curiosityVar);
+  if (roverInfoVar && curiosityVar) {
+    const newStore = store.set("roverInfo", Immutable.fromJS(roverInfoVar));
+    const newStore2 = newStore.set("curiosity", Immutable.fromJS(curiosityVar));
 
-const updateStore = (state, newState) => {
-  console.log(newState);
-  const newStore = store.set("roverInfo", Immutable.fromJS(newState.roverInfo));
-  console.log(Immutable.Seq(newStore));
-  render(root, Immutable.Seq(newStore));
+    console.log(newStore2);
+    console.log(Immutable.Seq(newStore2));
+    render(root, Immutable.Seq(newStore2));
+  }
 };
 const render = async (root, state) => {
   root.innerHTML = App(state);
@@ -19,11 +32,14 @@ const render = async (root, state) => {
 // create content
 const App = state => {
   console.log(state);
-  let { rovers, roverInfo } = state;
   const roversArr = state.getIn(["rovers"]);
   const newRoverInfoRover = state.getIn(["roverInfo", "rover"]);
   const newRoverInfo = state.getIn(["roverInfo"]);
-  console.log(state);
+  const newCuriosity = state.getIn(["curiosity"]);
+  console.log(newRoverInfo);
+
+  RoverInfo(newRoverInfo);
+  Curiosity(newCuriosity);
   return `
         <header>
         <h1>
@@ -46,26 +62,30 @@ const App = state => {
         <main>
         <p>
         revor name : ${
-          newRoverInfoRover ? state.getIn(["roverInfo", "rover", "name"]) : ""
+          newRoverInfo
+            ? state.getIn(["roverInfo", "roverInfo", "rover", "name"])
+            : ""
         }
         </p>
         <p>
         Launch Date :  ${
-          newRoverInfoRover
-            ? state.getIn(["roverInfo", "rover", "launch_date"])
+          newRoverInfo
+            ? state.getIn(["roverInfo", "roverInfo", "rover", "launch_date"])
             : ""
         }
         </p>
         <p>
         Landing Date :  ${
-          newRoverInfoRover
-            ? state.getIn(["roverInfo", "rover", "landing_date"])
+          newRoverInfo
+            ? state.getIn(["roverInfo", "roverInfo", "rover", "landing_date"])
             : ""
         }
         </p>
         <p>
         Status : ${
-          newRoverInfoRover ? state.getIn(["roverInfo", "rover", "status"]) : ""
+          newRoverInfo
+            ? state.getIn(["roverInfo", "roverInfo", "rover", "status"])
+            : ""
         }
         </p>
         <p>
@@ -73,7 +93,6 @@ const App = state => {
         </main>
         <section>
         <div class="imgContainer">
-        ${ImageOfTheDay(newRoverInfo)}
 <p>date</p>
         </div>
         </section>
@@ -90,31 +109,41 @@ window.addEventListener("load", () => {
 
 // ------------------------------------------------------  COMPONENTS
 
-// Pure function that renders conditional information -- THIS IS JUST AN EXAMPLE, you can delete it.
-const Greeting = name => {
-  if (name) {
-    return `
-            <h1>Welcome, ${name}!</h1>
-        `;
-  }
-
-  return `
-        <h1>Hello!</h1>
-    `;
-};
-
 // Example of a pure function that renders infomation requested from the backend
-const ImageOfTheDay = roverInfo => {
+const RoverInfo = roverInfo => {
   // If image does not already exist, or it is not from today -- request it again
-  console.log(roverInfo);
   // const today = new Date();
   // const photodate = new Date(roverInfo.date);
   // console.log(photodate.getDate(), today.getDate());
   // console.log(photodate.getDate() === today.getDate());
   if (!roverInfo) {
-    getImageOfTheDay(store);
+    getRoverInfo(store);
   }
-  console.log(roverInfo);
+  // check if the photo of the day is actually type video!
+  // if (roverInfo.media_type === "video") {
+  //   return `
+  //           <p>See today's featured video <a href="${roverInfo.url}">here</a></p>
+  //           <p>${roverInfo.title}</p>
+  //           <p>${roverInfo.explanation}</p>
+  //       `;
+  // } else {
+  //   return `
+  //           <img src="${roverInfo.image.url}" height="350px" width="100%" />
+  //           <p>${roverInfo.image.explanation}</p>
+  //       `;
+  // }
+};
+const Curiosity = curiosity => {
+  // If image does not already exist, or it is not from today -- request it again
+  // const today = new Date();
+  // const photodate = new Date(roverInfo.date);
+  // console.log(photodate.getDate(), today.getDate());
+  // console.log(photodate.getDate() === today.getDate());
+  console.log(curiosity);
+  if (!curiosity) {
+    getCuriosity(store);
+  }
+  console.log(store);
 
   // check if the photo of the day is actually type video!
   // if (roverInfo.media_type === "video") {
@@ -130,19 +159,28 @@ const ImageOfTheDay = roverInfo => {
   //       `;
   // }
 };
-
 // ------------------------------------------------------  API CALLS
 
 // Example API call
-const getImageOfTheDay = state => {
-  console.log(state);
+const getRoverInfo = state => {
   let { roverInfo } = state;
-  console.log({ roverInfo });
   fetch(`http://localhost:3000/roverinfo`)
     .then(res => res.json())
     .then(roverInfo => {
-      updateStore(store, { roverInfo });
+      updateStore(store, "roverInfo", { roverInfo });
       console.log({ roverInfo });
+    });
+  // return data;
+};
+const getCuriosity = state => {
+  console.log(state);
+  let { curiosity } = state;
+  console.log({ curiosity });
+  fetch(`http://localhost:3000/curiosity`)
+    .then(res => res.json())
+    .then(curiosity => {
+      updateStore(store, "curiosity", { curiosity });
+      console.log({ curiosity });
     });
   // return data;
 };
