@@ -42,11 +42,13 @@ const App = state => {
   Curiosity(newCuriosity);
   const photos = state.getIn(["curiosity", "curiosity", "photos"]);
   console.log(photos);
-  photosArr = photos.map((e, i) => {
-    if (i < 10) {
-      return `<img src=${e.getIn(["img_src"])}>`;
-    }
-  });
+  photosArr = photos
+    .map((e, i) => {
+      return `<div class="imgContainer">
+      <img src=${e.getIn(["img_src"])}><p>${e.getIn(["earth_date"])}</p>
+      </div>`;
+    })
+    .join("");
   console.log(photosArr);
   return `
         <header>
@@ -99,11 +101,8 @@ const App = state => {
         <p>
           Most recently available photos :</p>
         </main>
-        <section>
-        <div class="imgContainer">
+        <section class="allImgs">
         ${photosArr}
-<p>date</p>
-        </div>
         </section>
         <footer>
         all rights reserved 2020
