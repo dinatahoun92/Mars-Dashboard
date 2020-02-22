@@ -40,6 +40,14 @@ const App = state => {
 
   RoverInfo(newRoverInfo);
   Curiosity(newCuriosity);
+  const photos = state.getIn(["curiosity", "curiosity", "photos"]);
+  console.log(photos);
+  photosArr = photos.map((e, i) => {
+    if (i < 10) {
+      return `<img src=${e.getIn(["img_src"])}>`;
+    }
+  });
+  console.log(photosArr);
   return `
         <header>
         <h1>
@@ -93,6 +101,7 @@ const App = state => {
         </main>
         <section>
         <div class="imgContainer">
+        ${photosArr}
 <p>date</p>
         </div>
         </section>
