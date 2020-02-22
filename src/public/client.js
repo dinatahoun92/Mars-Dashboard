@@ -3,26 +3,33 @@ let store = Immutable.fromJS({
   rovers: ["Curiosity", "Opportunity", "Spirit"],
   chosenRover: "Curiosity"
 });
-let roverInfoVar, curiosityVar;
+let roverInfoVar, curiosityVar, opportunityVar, spiritVar;
 // add our markup to the page
 const root = document.getElementById("root");
 const updateStore = (state, item, newState) => {
+  console.log(item);
   if (item === "roverInfo") {
     roverInfoVar = newState;
-  }
-  if (item === "curiosity") {
+  } else if (item === "curiosity") {
     curiosityVar = newState;
-    console.log(newState);
+  } else if (item === "opportunity") {
+    opportunityVar = newState;
+  } else {
+    spiritVar = newState;
   }
   console.log(roverInfoVar);
   console.log(curiosityVar);
-  if (roverInfoVar && curiosityVar) {
+  if (roverInfoVar && curiosityVar && opportunityVar && spiritVar) {
     const newStore = store.set("roverInfo", Immutable.fromJS(roverInfoVar));
     const newStore2 = newStore.set("curiosity", Immutable.fromJS(curiosityVar));
-
-    console.log(newStore2);
-    console.log(Immutable.Seq(newStore2));
-    render(root, Immutable.Seq(newStore2));
+    const newStore3 = newStore2.set(
+      "opportunity",
+      Immutable.fromJS(opportunityVar)
+    );
+    const newStore4 = newStore3.set("spirit", Immutable.fromJS(spiritVar));
+    console.log(newStore4);
+    console.log(Immutable.Seq(newStore4));
+    render(root, Immutable.Seq(newStore4));
   }
 };
 const render = async (root, state) => {
@@ -36,11 +43,17 @@ const App = state => {
   const newRoverInfoRover = state.getIn(["roverInfo", "rover"]);
   const newRoverInfo = state.getIn(["roverInfo"]);
   const newCuriosity = state.getIn(["curiosity"]);
+  const newOpportunity = state.getIn(["opportunity"]);
+  const newSpirit = state.getIn(["spirit"]);
+
   console.log(newRoverInfo);
 
   RoverInfo(newRoverInfo);
   Curiosity(newCuriosity);
-  const photos = state.getIn(["curiosity", "curiosity", "latest_photos"]);
+  Opportunity(newOpportunity);
+  Spirit(newSpirit);
+
+  const photos = state.getIn(["spirit", "spirit", "latest_photos"]);
   console.log(photos);
   photosArr = photos
     .map((e, i) => {
@@ -104,9 +117,7 @@ const App = state => {
         <section class="allImgs">
         ${photosArr}
         </section>
-        <footer>
-        all rights reserved 2020
-        </footer>
+      
     `;
 };
 
@@ -119,53 +130,30 @@ window.addEventListener("load", () => {
 
 // Example of a pure function that renders infomation requested from the backend
 const RoverInfo = roverInfo => {
-  // If image does not already exist, or it is not from today -- request it again
-  // const today = new Date();
-  // const photodate = new Date(roverInfo.date);
-  // console.log(photodate.getDate(), today.getDate());
-  // console.log(photodate.getDate() === today.getDate());
   if (!roverInfo) {
     getRoverInfo(store);
   }
-  // check if the photo of the day is actually type video!
-  // if (roverInfo.media_type === "video") {
-  //   return `
-  //           <p>See today's featured video <a href="${roverInfo.url}">here</a></p>
-  //           <p>${roverInfo.title}</p>
-  //           <p>${roverInfo.explanation}</p>
-  //       `;
-  // } else {
-  //   return `
-  //           <img src="${roverInfo.image.url}" height="350px" width="100%" />
-  //           <p>${roverInfo.image.explanation}</p>
-  //       `;
-  // }
 };
 const Curiosity = curiosity => {
-  // If image does not already exist, or it is not from today -- request it again
-  // const today = new Date();
-  // const photodate = new Date(roverInfo.date);
-  // console.log(photodate.getDate(), today.getDate());
-  // console.log(photodate.getDate() === today.getDate());
   console.log(curiosity);
   if (!curiosity) {
     getCuriosity(store);
   }
   console.log(store);
-
-  // check if the photo of the day is actually type video!
-  // if (roverInfo.media_type === "video") {
-  //   return `
-  //           <p>See today's featured video <a href="${roverInfo.url}">here</a></p>
-  //           <p>${roverInfo.title}</p>
-  //           <p>${roverInfo.explanation}</p>
-  //       `;
-  // } else {
-  //   return `
-  //           <img src="${roverInfo.image.url}" height="350px" width="100%" />
-  //           <p>${roverInfo.image.explanation}</p>
-  //       `;
-  // }
+};
+const Opportunity = opportunity => {
+  console.log(opportunity);
+  if (!opportunity) {
+    getOpportunity(store);
+  }
+  console.log(store);
+};
+const Spirit = spirit => {
+  console.log(spirit);
+  if (!spirit) {
+    getSpirit(store);
+  }
+  console.log(store);
 };
 // ------------------------------------------------------  API CALLS
 
@@ -178,7 +166,6 @@ const getRoverInfo = state => {
       updateStore(store, "roverInfo", { roverInfo });
       console.log({ roverInfo });
     });
-  // return data;
 };
 const getCuriosity = state => {
   console.log(state);
@@ -190,5 +177,26 @@ const getCuriosity = state => {
       updateStore(store, "curiosity", { curiosity });
       console.log({ curiosity });
     });
-  // return data;
+};
+const getOpportunity = state => {
+  console.log(state);
+  let { opportunity } = state;
+  console.log({ opportunity });
+  fetch(`http://localhost:3000/opportunity`)
+    .then(res => res.json())
+    .then(opportunity => {
+      updateStore(store, "opportunity", { opportunity });
+      console.log({ opportunity });
+    });
+};
+const getSpirit = state => {
+  console.log(state);
+  let { spirit } = state;
+  console.log({ spirit });
+  fetch(`http://localhost:3000/spirit`)
+    .then(res => res.json())
+    .then(spirit => {
+      updateStore(store, "spirit", { spirit });
+      console.log({ spirit });
+    });
 };
