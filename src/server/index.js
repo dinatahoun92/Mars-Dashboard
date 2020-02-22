@@ -29,7 +29,7 @@ app.get("/roverinfo", async (req, res) => {
 app.get("/curiosity", async (req, res) => {
   try {
     let curiosity = await fetch(
-      `https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?sol=1000&api_key=${process.env.API_KEY}`
+      `https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/latest_photos?api_key=${process.env.API_KEY}`
     ).then(res => res.json());
     res.send(curiosity);
   } catch (err) {

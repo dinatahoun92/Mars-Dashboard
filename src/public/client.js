@@ -40,7 +40,7 @@ const App = state => {
 
   RoverInfo(newRoverInfo);
   Curiosity(newCuriosity);
-  const photos = state.getIn(["curiosity", "curiosity", "photos"]);
+  const photos = state.getIn(["curiosity", "curiosity", "latest_photos"]);
   console.log(photos);
   photosArr = photos
     .map((e, i) => {
