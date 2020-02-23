@@ -1,15 +1,23 @@
 let store = Immutable.fromJS({
   user: { name: "Student" },
-  rovers: ["Curiosity", "Opportunity", "Spirit"],
-  chosenRover: "Curiosity"
+  rovers: ["Curiosity", "Opportunity", "Spirit"]
 });
-let roverInfoVar, curiosityVar, opportunityVar, spiritVar;
+let roverInfoCuriosityVar,
+  roverInfoOpportunityVar,
+  roverInfoSpiritVar,
+  curiosityVar,
+  opportunityVar,
+  spiritVar;
 // add our markup to the page
 const root = document.getElementById("root");
 const updateStore = (state, item, newState) => {
   console.log(item);
-  if (item === "roverInfo") {
-    roverInfoVar = newState;
+  if (item === "roverInfoCuriosity") {
+    roverInfoCuriosityVar = newState;
+  } else if (item === "roverInfoOpportunity") {
+    roverInfoOpportunityVar = newState;
+  } else if (item === "roverInfoSpirit") {
+    roverInfoSpiritVar = newState;
   } else if (item === "curiosity") {
     curiosityVar = newState;
   } else if (item === "opportunity") {
@@ -17,19 +25,38 @@ const updateStore = (state, item, newState) => {
   } else {
     spiritVar = newState;
   }
-  console.log(roverInfoVar);
   console.log(curiosityVar);
-  if (roverInfoVar && curiosityVar && opportunityVar && spiritVar) {
-    const newStore = store.set("roverInfo", Immutable.fromJS(roverInfoVar));
+  if (
+    roverInfoCuriosityVar &&
+    roverInfoOpportunityVar &&
+    roverInfoSpiritVar &&
+    curiosityVar &&
+    opportunityVar &&
+    spiritVar
+  ) {
+    const newStore = store.set(
+      "roverInfoCuriosity",
+      Immutable.fromJS(roverInfoCuriosityVar)
+    );
+    console.log(roverInfoCuriosityVar);
+
     const newStore2 = newStore.set("curiosity", Immutable.fromJS(curiosityVar));
     const newStore3 = newStore2.set(
       "opportunity",
       Immutable.fromJS(opportunityVar)
     );
     const newStore4 = newStore3.set("spirit", Immutable.fromJS(spiritVar));
-    console.log(newStore4);
-    console.log(Immutable.Seq(newStore4));
-    render(root, Immutable.Seq(newStore4));
+    const newStore5 = newStore4.set(
+      "roverInfoOpportunity",
+      Immutable.fromJS(roverInfoOpportunityVar)
+    );
+    const newStore6 = newStore5.set(
+      "roverInfoSpirit",
+      Immutable.fromJS(roverInfoSpiritVar)
+    );
+    console.log(newStore6);
+    console.log(Immutable.Seq(newStore6));
+    render(root, Immutable.Seq(newStore6));
   }
 };
 const render = async (root, state) => {
@@ -38,23 +65,25 @@ const render = async (root, state) => {
 
 // create content
 const App = state => {
-  console.log(state);
   const roversArr = state.getIn(["rovers"]);
-  const newRoverInfoRover = state.getIn(["roverInfo", "rover"]);
-  const newRoverInfo = state.getIn(["roverInfo"]);
+  const newRoverInfoCuriosity = state.getIn(["roverInfoCuriosity"]);
+  const newRoverInfoOpportunity = state.getIn(["roverInfoOpportunity"]);
+  const newRoverInfoSpirit = state.getIn(["roverInfoSpirit"]);
   const newCuriosity = state.getIn(["curiosity"]);
   const newOpportunity = state.getIn(["opportunity"]);
   const newSpirit = state.getIn(["spirit"]);
 
-  console.log(newRoverInfo);
+  console.log(Immutable.fromJS(state));
 
-  RoverInfo(newRoverInfo);
+  RoverInfoOpportunity(newRoverInfoOpportunity);
+  RoverInfoCuriosity(newRoverInfoSpirit);
+  RoverInfoSpirit(newRoverInfoSpirit);
   Curiosity(newCuriosity);
   Opportunity(newOpportunity);
   Spirit(newSpirit);
 
   const photos = state.getIn(["spirit", "spirit", "latest_photos"]);
-  console.log(photos);
+  console.log(newRoverInfoOpportunity);
   photosArr = photos
     .map((e, i) => {
       return `<div class="imgContainer">
@@ -85,29 +114,49 @@ const App = state => {
         <main>
         <p>
         revor name : ${
-          newRoverInfo
-            ? state.getIn(["roverInfo", "roverInfo", "rover", "name"])
+          newRoverInfoOpportunity
+            ? state.getIn([
+                "roverInfoOpportunity",
+                "roverInfoOpportunity",
+                "rover",
+                "name"
+              ])
             : ""
         }
         </p>
         <p>
         Launch Date :  ${
-          newRoverInfo
-            ? state.getIn(["roverInfo", "roverInfo", "rover", "launch_date"])
+          newRoverInfoOpportunity
+            ? state.getIn([
+                "roverInfoOpportunity",
+                "roverInfoOpportunity",
+                "rover",
+                "launch_date"
+              ])
             : ""
         }
         </p>
         <p>
         Landing Date :  ${
-          newRoverInfo
-            ? state.getIn(["roverInfo", "roverInfo", "rover", "landing_date"])
+          newRoverInfoOpportunity
+            ? state.getIn([
+                "roverInfoOpportunity",
+                "roverInfoOpportunity",
+                "rover",
+                "landing_date"
+              ])
             : ""
         }
         </p>
         <p>
         Status : ${
-          newRoverInfo
-            ? state.getIn(["roverInfo", "roverInfo", "rover", "status"])
+          newRoverInfoOpportunity
+            ? state.getIn([
+                "roverInfoOpportunity",
+                "roverInfoOpportunity",
+                "rover",
+                "status"
+              ])
             : ""
         }
         </p>
@@ -129,9 +178,20 @@ window.addEventListener("load", () => {
 // ------------------------------------------------------  COMPONENTS
 
 // Example of a pure function that renders infomation requested from the backend
-const RoverInfo = roverInfo => {
-  if (!roverInfo) {
-    getRoverInfo(store);
+const RoverInfoCuriosity = roverInfoCuriosity => {
+  console.log(roverInfoCuriosity);
+  if (!roverInfoCuriosity) {
+    getRoverInfoCuriosity(store);
+  }
+};
+const RoverInfoOpportunity = roverInfoOpportunity => {
+  if (!roverInfoOpportunity) {
+    getRoverInfoOpportunity(store);
+  }
+};
+const RoverInfoSpirit = roverInfoSpirit => {
+  if (!roverInfoSpirit) {
+    getRoverInfoSpirit(store);
   }
 };
 const Curiosity = curiosity => {
@@ -158,13 +218,32 @@ const Spirit = spirit => {
 // ------------------------------------------------------  API CALLS
 
 // Example API call
-const getRoverInfo = state => {
-  let { roverInfo } = state;
-  fetch(`http://localhost:3000/roverinfo`)
+
+const getRoverInfoCuriosity = state => {
+  let { roverInfoCuriosity } = state;
+  fetch(`http://localhost:3000/roverinfoopportunity`)
     .then(res => res.json())
-    .then(roverInfo => {
-      updateStore(store, "roverInfo", { roverInfo });
-      console.log({ roverInfo });
+    .then(roverInfoCuriosity => {
+      updateStore(store, "roverInfoCuriosity", { roverInfoCuriosity });
+      console.log({ roverInfoCuriosity });
+    });
+};
+const getRoverInfoOpportunity = state => {
+  let { roverInfoOpportunity } = state;
+  fetch(`http://localhost:3000/roverinfoopportunity`)
+    .then(res => res.json())
+    .then(roverInfoOpportunity => {
+      updateStore(store, "roverInfoOpportunity", { roverInfoOpportunity });
+      console.log({ roverInfoOpportunity });
+    });
+};
+const getRoverInfoSpirit = state => {
+  let { roverInfoSpirit } = state;
+  fetch(`http://localhost:3000/roverinfospirit`)
+    .then(res => res.json())
+    .then(roverInfoSpirit => {
+      updateStore(store, "roverInfoSpirit", { roverInfoSpirit });
+      console.log({ roverInfoSpirit });
     });
 };
 const getCuriosity = state => {
