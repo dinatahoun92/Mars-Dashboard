@@ -24,15 +24,16 @@ const roversList = roversArr1 =>
  `
     )
     .join("");
-const photosFun = photos => {
-  const photosArr = photos
+
+const photoesArr = photos1 =>
+  photos1
     .map((e, i) => {
       return `<div class="imgContainer">
     <img src=${e.getIn(["img_src"])}><p>${e.getIn(["earth_date"])}</p>
     </div>`;
     })
     .join("");
-
+const photosFun = (photosArr, photos) => {
   return `<section class="allImgs">
   ${photosArr(photos)}</section>`;
 };
@@ -117,13 +118,6 @@ const App = state => {
 
   const photos = state.getIn(["spirit", "spirit", "latest_photos"]);
   console.log(newRoverInfoOpportunity);
-  photosArr = photos
-    .map((e, i) => {
-      return `<div class="imgContainer">
-      <img src=${e.getIn(["img_src"])}><p>${e.getIn(["earth_date"])}</p>
-      </div>`;
-    })
-    .join("");
 
   console.log(roversArr);
   return `
@@ -188,7 +182,7 @@ const App = state => {
         <p>
           Most recently available photos :</p>
         </main>
-        ${photosArr}
+        ${photosFun(photoesArr, photos)}
       
     `;
 };
