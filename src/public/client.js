@@ -50,7 +50,7 @@ const photoesArr = photos1 =>
   photos1
     .map((e, i) => {
       return `<div class="imgContainer">
-    <img src=${e.getIn(["img_src"])}><p>${e.getIn(["earth_date"])}</p>
+    <img src=${e.getIn(["img_src"])}><p>date: ${e.getIn(["earth_date"])}</p>
     </div>`;
     })
     .join("");
@@ -388,7 +388,7 @@ const Spirit = spirit => {
 
 const getRoverInfoCuriosity = state => {
   let { roverInfoCuriosity } = state;
-  fetch(`http://localhost:3000/roverinfoopportunity`)
+  fetch(`http://localhost:3000/roverinfocuriosity`)
     .then(res => res.json())
     .then(roverInfoCuriosity => {
       updateStore(store, "roverInfoCuriosity", { roverInfoCuriosity });

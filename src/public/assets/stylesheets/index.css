@@ -56,7 +56,7 @@ p {
   margin-left: 5%;
 }
 .imgContainer p {
-  bottom: 20px;
+  top: 20px;
   position: absolute;
   z-index: 9999999;
   color: #fff;
