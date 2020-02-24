@@ -10,19 +10,31 @@ let roverInfoCuriosityVar,
   clickedItem,
   spiritVar;
 
+// higher order functions
 const ul = roversArr => {
-  const roversList = roversArr =>
-    roversArr
-      .map(
-        (item, i) =>
-          `  <li id=${item}>
-     ${item}
-     <li>
-     `
-      )
-      .join("");
-
   return `<ul>${roversList(roversArr)}</ul>`;
+};
+const roversList = roversArr1 =>
+  roversArr1
+    .map(
+      (item, i) =>
+        `  <li id=${item}>
+ ${item}
+ <li>
+ `
+    )
+    .join("");
+const photosFun = photos => {
+  const photosArr = photos
+    .map((e, i) => {
+      return `<div class="imgContainer">
+    <img src=${e.getIn(["img_src"])}><p>${e.getIn(["earth_date"])}</p>
+    </div>`;
+    })
+    .join("");
+
+  return `<section class="allImgs">
+  ${photosArr(photos)}</section>`;
 };
 
 const root = document.getElementById("root");
@@ -176,9 +188,7 @@ const App = state => {
         <p>
           Most recently available photos :</p>
         </main>
-        <section class="allImgs">
         ${photosArr}
-        </section>
       
     `;
 };

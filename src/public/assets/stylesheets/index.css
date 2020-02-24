@@ -35,8 +35,8 @@ nav ul li {
 main {
 }
 .imgContainer {
-  width: 25%;
-  height: 250px;
+  width: 100%;
+  height: 80vh;
   position: relative;
 }
 .imgContainer img {
