@@ -7,18 +7,39 @@ let roverInfoCuriosityVar,
   roverInfoSpiritVar,
   curiosityVar,
   opportunityVar,
-  clickedItem,
+  clickedItem = "Curiosity",
   spiritVar;
 
 // higher order functions
 const ul = roversArr => {
   return `<ul>${roversList(roversArr)}</ul>`;
 };
+const View = item => {
+  console.log(item);
+  document.getElementById("opportunityDiv").style.display = "none";
+  document.getElementById("spiritDiv").style.display = "none";
+  document.getElementById("curiosityDiv").style.display = "none";
+};
+showOpportunity = () => {
+  document.getElementById("opportunityDiv").style.display = "block";
+  document.getElementById("spiritDiv").style.display = "none";
+  document.getElementById("curiosityDiv").style.display = "none";
+};
+showCuriosity = () => {
+  document.getElementById("opportunityDiv").style.display = "none";
+  document.getElementById("spiritDiv").style.display = "none";
+  document.getElementById("curiosityDiv").style.display = "block";
+};
+showSpirit = () => {
+  document.getElementById("opportunityDiv").style.display = "none";
+  document.getElementById("spiritDiv").style.display = "block";
+  document.getElementById("curiosityDiv").style.display = "none";
+};
 const roversList = roversArr1 =>
   roversArr1
     .map(
       (item, i) =>
-        `  <li id=${item}>
+        `<li id=id${item} onclick=show${item}()>
  ${item}
  <li>
  `
@@ -86,11 +107,6 @@ const updateStore = (state, item, newState) => {
     console.log(newStore6);
     console.log(Immutable.Seq(newStore6));
     render(root, Immutable.Seq(newStore6));
-    document.getElementById("Curiosity").click(() => (clickedItem = Curiosity));
-    document
-      .getElementById("Opportunity")
-      .click(() => (clickedItem = Opportunity));
-    document.getElementById("Spirit").click(() => (clickedItem = Spirit));
   }
 };
 const render = async (root, state) => {
@@ -106,7 +122,6 @@ const App = state => {
   const newCuriosity = state.getIn(["curiosity"]);
   const newOpportunity = state.getIn(["opportunity"]);
   const newSpirit = state.getIn(["spirit"]);
-
   console.log(Immutable.fromJS(state));
 
   RoverInfoOpportunity(newRoverInfoOpportunity);
@@ -116,11 +131,23 @@ const App = state => {
   Opportunity(newOpportunity);
   Spirit(newSpirit);
 
-  const photos = state.getIn(["spirit", "spirit", "latest_photos"]);
-  console.log(newRoverInfoOpportunity);
+  let photosCuriosity = state.getIn([
+    "curiosity",
+    "curiosity",
+    "latest_photos"
+  ]);
+  let photosOpportunity = state.getIn([
+    "opportunity",
+    "opportunity",
+    "latest_photos"
+  ]);
+  let photosSpirit = state.getIn(["spirit", "spirit", "latest_photos"]);
+
+  console.log(newRoverInfoCuriosity);
 
   console.log(roversArr);
   return `
+  <div id="opportunityDiv" style="display:none">
         <header>
         <h1>
         Mars Dashboard
@@ -182,8 +209,131 @@ const App = state => {
         <p>
           Most recently available photos :</p>
         </main>
-        ${photosFun(photoesArr, photos)}
-      
+        ${photosFun(photoesArr, photosOpportunity)}
+      </div>
+      <div id="curiosityDiv" >
+        <header>
+        <h1>
+        Mars Dashboard
+        </h1>
+        </header>
+        <nav>
+        ${ul(roversArr)}
+
+        </nav>
+        <main>
+        <p>
+        revor name : ${
+          newRoverInfoCuriosity
+            ? state.getIn([
+                "roverInfoCuriosity",
+                "roverInfoCuriosity",
+                "rover",
+                "name"
+              ])
+            : ""
+        }
+        </p>
+        <p>
+        Launch Date :  ${
+          newRoverInfoCuriosity
+            ? state.getIn([
+                "roverInfoCuriosity",
+                "roverInfoCuriosity",
+                "rover",
+                "launch_date"
+              ])
+            : ""
+        }
+        </p>
+        <p>
+        Landing Date :  ${
+          newRoverInfoCuriosity
+            ? state.getIn([
+                "roverInfoCuriosity",
+                "roverInfoCuriosity",
+                "rover",
+                "landing_date"
+              ])
+            : ""
+        }
+        </p>
+        <p>
+        Status : ${
+          newRoverInfoCuriosity
+            ? state.getIn([
+                "roverInfoCuriosity",
+                "roverInfoCuriosity",
+                "rover",
+                "status"
+              ])
+            : ""
+        }
+        </p>
+        <p>
+          Most recently available photos :</p>
+        </main>
+        ${photosFun(photoesArr, photosCuriosity)}
+      </div>
+      <div id="spiritDiv" style="display:none">
+      <header>
+      <h1>
+      Mars Dashboard
+      </h1>
+      </header>
+      <nav>
+      ${ul(roversArr)}
+
+      </nav>
+      <main>
+      <p>
+      revor name : ${
+        newRoverInfoSpirit
+          ? state.getIn(["roverInfoSpirit", "roverInfoSpirit", "rover", "name"])
+          : ""
+      }
+      </p>
+      <p>
+      Launch Date :  ${
+        newRoverInfoSpirit
+          ? state.getIn([
+              "roverInfoSpirit",
+              "roverInfoSpirit",
+              "rover",
+              "launch_date"
+            ])
+          : ""
+      }
+      </p>
+      <p>
+      Landing Date :  ${
+        newRoverInfoSpirit
+          ? state.getIn([
+              "roverInfoSpirit",
+              "roverInfoSpirit",
+              "rover",
+              "landing_date"
+            ])
+          : ""
+      }
+      </p>
+      <p>
+      Status : ${
+        newRoverInfoSpirit
+          ? state.getIn([
+              "roverInfoSpirit",
+              "roverInfoSpirit",
+              "rover",
+              "status"
+            ])
+          : ""
+      }
+      </p>
+      <p>
+        Most recently available photos :</p>
+      </main>
+      ${photosFun(photoesArr, photosSpirit)}
+    </div>
     `;
 };
 
