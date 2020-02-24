@@ -7,8 +7,24 @@ let roverInfoCuriosityVar,
   roverInfoSpiritVar,
   curiosityVar,
   opportunityVar,
+  clickedItem,
   spiritVar;
-// add our markup to the page
+
+const ul = roversArr => {
+  const roversList = roversArr =>
+    roversArr
+      .map(
+        (item, i) =>
+          `  <li id=${item}>
+     ${item}
+     <li>
+     `
+      )
+      .join("");
+
+  return `<ul>${roversList(roversArr)}</ul>`;
+};
+
 const root = document.getElementById("root");
 const updateStore = (state, item, newState) => {
   console.log(item);
@@ -57,6 +73,11 @@ const updateStore = (state, item, newState) => {
     console.log(newStore6);
     console.log(Immutable.Seq(newStore6));
     render(root, Immutable.Seq(newStore6));
+    document.getElementById("Curiosity").click(() => (clickedItem = Curiosity));
+    document
+      .getElementById("Opportunity")
+      .click(() => (clickedItem = Opportunity));
+    document.getElementById("Spirit").click(() => (clickedItem = Spirit));
   }
 };
 const render = async (root, state) => {
@@ -91,7 +112,8 @@ const App = state => {
       </div>`;
     })
     .join("");
-  console.log(photosArr);
+
+  console.log(roversArr);
   return `
         <header>
         <h1>
@@ -99,17 +121,8 @@ const App = state => {
         </h1>
         </header>
         <nav>
-        <ul>
-       ${roversArr
-         .map(
-           (item, i) =>
-             `  <li>
-          ${item}
-          <li>
-          `
-         )
-         .join("")}
-        <ul>
+        ${ul(roversArr)}
+
         </nav>
         <main>
         <p>
