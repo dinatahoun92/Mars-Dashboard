@@ -3,7 +3,6 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const fetch = require("node-fetch");
 const path = require("path");
-const { Map } = require("immutable");
 
 const app = express();
 const port = 3000;
@@ -16,7 +15,7 @@ app.use("/", express.static(path.join(__dirname, "../public")));
 // your API calls
 
 // example API call
-app.get("/roverinfocuriosity", async (req, res) => {
+app.get("/roverinfo/curiosity", async (req, res) => {
   try {
     let roverinfoCuriosity = await fetch(
       `https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity?sol=1000&api_key=${process.env.API_KEY}`
@@ -26,7 +25,7 @@ app.get("/roverinfocuriosity", async (req, res) => {
     console.log("error:", err);
   }
 });
-app.get("/roverinfoopportunity", async (req, res) => {
+app.get("/roverinfo/opportunity", async (req, res) => {
   try {
     let roverinfoopportunity = await fetch(
       `https://api.nasa.gov/mars-photos/api/v1/rovers/opportunity?sol=1000&api_key=${process.env.API_KEY}`
@@ -36,7 +35,7 @@ app.get("/roverinfoopportunity", async (req, res) => {
     console.log("error:", err);
   }
 });
-app.get("/roverinfospirit", async (req, res) => {
+app.get("/roverinfo/spirit", async (req, res) => {
   try {
     let roverinfospirit = await fetch(
       `https://api.nasa.gov/mars-photos/api/v1/rovers/spirit?sol=1000&api_key=${process.env.API_KEY}`
