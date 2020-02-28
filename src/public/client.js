@@ -58,38 +58,7 @@ const App = () => {
     getPhotos(store.clickedItem);
     getRoverInfo(store.clickedItem);
   }
-  return `
- <nav>
-        ${ul(store.rovers)}
-        </nav>
-        <main>
-        <p>
-        revor name : ${selectedItem ? selectedItem[0].rover.name : ""}
-        </p>
-        <p>
-        Launch Date :  ${selectedItem ? selectedItem[0].rover.launch_date : ""}
-        </p>
-        <p>
-        Landing Date : ${selectedItem ? selectedItem[0].rover.landing_date : ""}
-        </p>
-        <p>
-        Status :${selectedItem ? selectedItem[0].rover.status : ""}
-        </p>
-        <p>
-        Date Of Most Recent Photos Were taken : ${
-          selectedPhotos[0].latest_photos
-            ? selectedPhotos[0].latest_photos[0].earth_date
-            : ""
-        }
-        </p>
-        <p>
-          Most recently available photos :</p>
-        </main>
-        ${photosFun(
-          photoesArr,
-          selectedPhotos[0].latest_photos ? selectedPhotos[0].latest_photos : []
-        )}     
-    `;
+  return loadUi(selectedItem, selectedPhotos);
 };
 
 // listening for load event because page should load before any JS is called
@@ -101,7 +70,38 @@ window.addEventListener("load", () => {
 
 // Example of a pure function that renders infomation requested from the backend
 // ------------------------------------------------------  API CALLS
-
+const loadUi = (selectedItem, selectedPhotos) =>
+  `<nav>
+         ${ul(store.rovers)}
+         </nav>
+         <main>
+         <p>
+         revor name : ${selectedItem ? selectedItem[0].rover.name : ""}
+         </p>
+         <p>
+         Launch Date :  ${selectedItem ? selectedItem[0].rover.launch_date : ""}
+         </p>
+         <p>
+         Landing Date : ${
+           selectedItem ? selectedItem[0].rover.landing_date : ""
+         }
+         </p>
+         <p>
+         Status :${selectedItem ? selectedItem[0].rover.status : ""}
+         </p>
+         <p>
+         Date Of Most Recent Photos Were taken : ${
+           selectedPhotos ? selectedPhotos[0].latest_photos[0].earth_date : ""
+         }
+         </p>
+         <p>
+           Most recently available photos :</p>
+         </main>
+         ${photosFun(
+           photoesArr,
+           selectedPhotos ? selectedPhotos[0].latest_photos : []
+         )}     
+     `;
 // Example API call
 
 const getPhotos = roverName => {
